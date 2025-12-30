@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Master: Full Syllabus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color Palette - Light Mode */
+            --primary: #2563eb;
+            --accent: #f59e0b;
+            --bg-body: #f8fafc;
+            --bg-sidebar: #0f172a;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --bg-slide-header: #f1f5f9;
+            --bg-ar-content: #fffbeb; 
+            --bg-discussion: #ecfdf5;
+            --text-main: #334155;
+            --text-sidebar: #ffffff;
+            --text-heading: #0f172a;
+            --text-ar-title: #b45309;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --sidebar-w: 300px;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --bg-body: #0f172a;
+            --bg-sidebar: #1e293b; 
+            --bg-card: #1e293b;
+            --bg-header: #1e293b;
+            --bg-slide-header: #334155;
+            --bg-ar-content: #422006; 
+            --bg-discussion: #064e3b;
+            --text-main: #cbd5e1;
+            --text-sidebar: #e2e8f0;
+            --text-heading: #f1f5f9;
+            --text-ar-title: #fcd34d;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-w);
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        aside h2 {
+            font-family: 'Cairo', sans-serif;
+            margin-bottom: 30px;
+            color: var(--accent);
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            padding-left: 20px; /* Slight movement effect */
+        }
+
+        .nav-btn.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-weight: bold;
+            border-right: 4px solid var(--primary);
+        }
+
+        /* Overlay for Mobile */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+
+        /* Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            background: var(--bg-header);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .top-header h1 {
+            color: var(--text-heading);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        
+        .action-btn:active { transform: scale(0.95); }
+
+        .dark-btn { background: #475569; }
+
+        .menu-btn {
+            display: none;
+            background: transparent;
+            color: var(--text-heading);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Lecture Styles */
+        .lecture { display: none; opacity: 0; transition: opacity 0.4s ease-in; }
+        .lecture.active { display: block; opacity: 1; }
+
+        .slide-block {
+            background: var(--bg-card);
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+
+        .summary-block .slide-header {
+            background: #dbeafe; 
+            color: #1e3a8a;
+        }
+        body.dark-mode .summary-block .slide-header {
+            background: #172554;
+            color: #bfdbfe;
+        }
+
+        .slide-header {
+            background: var(--bg-slide-header);
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            color: var(--text-heading);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-en, .content-ar { padding: 25px; }
+        .content-en { border-bottom: 1px dashed var(--border-color); }
+
+        .content-en h3 { color: var(--primary); margin-bottom: 15px; }
+        .content-en ul { padding-left: 20px; margin-bottom: 15px; }
+        .content-en li { margin-bottom: 8px; line-height: 1.6; }
+
+        /* Arabic */
+        .content-ar {
+            background: var(--bg-ar-content);
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+            display: none; 
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Show Arabic Class */
+        body.show-ar .content-ar { display: block; }
+        body.show-ar .content-en { display: none; }
+        body.show-ar #header-title { text-align: right; }
+
+        .ar-title {
+            color: var(--text-ar-title);
+            font-weight: 800;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .term {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            font-size: 0.9em;
+            direction: ltr;
+            display: inline-block;
+        }
+        body.dark-mode .term { background: #312e81; color: #e0e7ff; }
+
+        .discussion-box {
+            background: var(--bg-discussion);
+            border: 1px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: var(--text-heading);
+        }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid var(--border-color); padding: 10px; text-align: left; color: var(--text-main); }
+        .rtl-table th, .rtl-table td { text-align: right; }
+        th { background: var(--bg-slide-header); color: var(--text-heading); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            aside {
+                position: fixed; top: 0; left: 0; height: 100%; width: 260px;
+                transform: translateX(-100%); 
+                box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            }
+            aside.open { transform: translateX(0); }
+            .overlay.active { display: block; }
+            .menu-btn { display: block; }
+            main { padding: 15px; margin-top: 0; }
+            .top-header { padding: 15px; margin-bottom: 20px; }
+            .top-header h1 { font-size: 1.1rem; flex: 1; margin: 0 10px; }
+            .controls { gap: 5px; }
+            .action-btn span { display: none; }
+            .action-btn { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" onclick="closeMenu()"></div>
+
+    <aside id="sidebar">
+        <h2>📚 AI Syllabus</h2>
+        <button class="nav-btn active" onclick="showLec(1, this)">Module 1: Emerging AI</button>
+        <button class="nav-btn" onclick="showLec(2, this)">Module 2: Personalization</button>
+        <button class="nav-btn" onclick="showLec(3, this)">Module 3: Recognition</button>
+        <button class="nav-btn" onclick="showLec(4, this)">Module 4: Computer Vision</button>
+        <button class="nav-btn" onclick="showLec(5, this)">Module 5: Deep Learning</button>
+    </aside>
+
+    <main id="main-container">
+        <div class="top-header">
+            <button class="menu-btn" onclick="openMenu()">☰</button>
+            <h1 id="header-title">Emerging AI in Multimedia</h1>
+            <div class="controls">
+                <button class="action-btn dark-btn" onclick="toggleDark()" title="Dark Mode">🌙</button>
+                <button class="action-btn" onclick="toggleLang()" title="Switch Language">🔄 <span>Ar/En</span></button>
+            </div>
+        </div>
+
+        <div id="lec1" class="lecture active">
+            <div class="slide-block summary-block">
+                <div class="slide-header"><span>🚀 Quick Summary / ملخص سريع</span></div>
+                <div class="content-en">
+                    <p><strong>What is this module about?</strong><br>
+                    It introduces how AI is changing multimedia. We move from just "consuming" content to AI "generating" it (like images and music). We also cover the basic definitions and ethical challenges.</p>
+                </div>
+                <div class="content-ar">
+                    <p><strong>الموديل ده عن إيه؟</strong><br>
+                    هنا هنفهم إزاي الذكاء الاصطناعي قلب موازين الملتيميديا. هنتنقل من مجرد إننا نتفرج على المحتوى لأن الـ AI هو اللي "بيصنعه" (زي الصور والمزيكا). وكمان هنعرف الأساسيات والمشاكل الأخلاقية اللي ممكن تواجهنا.</p>
+                </div>
+            </div>
+            <div class="slide-block">
+                <div class="slide-header"><span>1. Intro & The Digital Revolution</span></div>
+                <div class="content-en">
+                    <h3>The Digital Revolution</h3>
+                    <p>Artificial Intelligence (AI) is changing how we create, interact with, and experience multimedia. From smart recommendations to automatically generated art, AI is everywhere in today's digital world.</p>
+                    <p>This lesson explores the opportunities and challenges of AI-powered multimedia.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 الثورة الرقمية</div>
+                    <p>الذكاء الاصطناعي (<span class="term">AI</span>) ليس مجرد تقنية، بل هو ثورة تغير 3 أشياء:</p>
+                    <ul>
+                        <li>كيف ننشئ المحتوى (<span class="term">Create</span>).</li>
+                        <li>كيف نتفاعل معه (<span class="term">Interact</span>).</li>
+                        <li>كيف نجربه ونشعر به (<span class="term">Experience</span>).</li>
+                    </ul>
+                    <p>من التوصيات الذكية إلى الفن المولد تلقائياً، الـ AI موجود في كل مكان.</p>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>2. What is Multimedia?</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Text:</strong> Written content like articles, captions, and subtitles is the backbone.</li>
+                        <li><strong>Images:</strong> Photos, graphics, and illustrations visually communicate ideas/emotions.</li>
+                        <li><strong>Audio:</strong> Enriches multimedia, adding depth and feeling.</li>
+                        <li><strong>Video:</strong> Moving images and animations bring stories to life.</li>
+                    </ul>
+                    <hr style="border-color: var(--border-color); margin: 15px 0;">
+                    <h3>How AI Powers It:</h3>
+                    <p><strong>Smarter Systems:</strong> AI can analyze, generate, and personalize content. It learns from data and adapts to user preferences. Systems can now recognize faces, voices, and emotions.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 تعريف الوسائط وكيف يدعمها الـ AI</div>
+                    <p>عناصر الملتيميديا:</p>
+                    <ul>
+                        <li><strong>النص (Text):</strong> هو العمود الفقري (Backbone).</li>
+                        <li><strong>الصور (Images):</strong> للتواصل البصري.</li>
+                        <li><strong>الصوت (Audio):</strong> يضيف العمق والمشاعر.</li>
+                        <li><strong>الفيديو (Video):</strong> يجعل القصص حية.</li>
+                    </ul>
+                    <p><strong>كيف يشغلها الـ AI؟</strong> يحولها لأنظمة أذكى (<span class="term">Smarter Systems</span>) تقوم بـ:</p>
+                    1. <span class="term">Analyze</span> (تحليل). <br>
+                    2. <span class="term">Generate</span> (توليد). <br>
+                    3. <span class="term">Personalize</span> (تخصيص) بناءً على التفضيلات (<span class="term">User Preferences</span>).
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>3. Generative Content (Creation)</span></div>
+                <div class="content-en">
+                    <h3>Generative Content in Action:</h3>
+                    <ul>
+                        <li><strong>AI Art:</strong> Tools like DALL-E and Midjourney create original images from text prompts.</li>
+                        <li><strong>Music Creation:</strong> AI composes music in different styles (soundtracks).</li>
+                        <li><strong>Video Synthesis:</strong> Generates/edits video (deepfakes, animations), transforming production.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 المحتوى التوليدي (Generative Content)</div>
+                    <p>الذكاء الاصطناعي الآن "مبدع". الأمثلة:</p>
+                    <ul>
+                        <li><strong>AI Art:</strong> أدوات مثل DALL-E تأخذ (<span class="term">Text Prompts</span>) وتخلق صوراً أصلية.</li>
+                        <li><strong>تأليف الموسيقى:</strong> برامج تؤلف مقطوعات كاملة.</li>
+                        <li><strong>تخليق الفيديو (Video Synthesis):</strong> إنشاء وتعديل الفيديو، وأهم مثال تقنية التزييف العميق (<span class="term">Deepfakes</span>).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>4. Personalization & Recognition (Brief)</span></div>
+                <div class="content-en">
+                    <p><strong>Personalization:</strong> AI recommends movies/news based on tastes (Netflix, YouTube). It makes experiences unique.</p>
+                    <p><strong>Recognition Systems:</strong> AI recognizes faces, objects, spoken words. Used in security, Siri/Alexa, and social media tagging.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التخصيص والتعرف (نظرة سريعة)</div>
+                    <ul>
+                        <li><strong>التخصيص (<span class="term">Tailored Experiences</span>):</strong> مثل اقتراحات يوتيوب ونتفليكس التي تناسب ذوقك.</li>
+                        <li><strong>أنظمة التعرف:</strong> الـ AI يتعرف على الوجوه، الأصوات، وحتى الكلمات المنطوقة (مثل Siri و Alexa).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>5. AI in Multimedia: Key Milestones</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>1970s (Speech Recognition):</strong> Early systems understood simple spoken words.</li>
+                        <li><strong>2010s (Image Recognition):</strong> AI began recognizing objects/faces, powering apps & security.</li>
+                        <li><strong>2020s (Generative AI):</strong> AI creates original images, music, video - revolutionizing creative industries.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 محطات تاريخية هامة (تواريخ الامتحان)</div>
+                    <ul>
+                        <li><strong>السبعينات (1970s):</strong> بداية التعرف على الكلام (<span class="term">Speech Recognition</span>) - كلمات بسيطة فقط.</li>
+                        <li><strong>2010s:</strong> بداية التعرف على الصور (<span class="term">Image Recognition</span>) والوجوه.</li>
+                        <li><strong>2020s:</strong> عصر الذكاء التوليدي (<span class="term">Generative AI</span>) - الآلة الآن تبتكر.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>6. Opportunities in Egypt & Education</span></div>
+                <div class="content-en">
+                    <h3>Opportunities in Egypt:</h3>
+                    <p>AI for Local Content (Arabic multimedia), translation, and accessible learning. Startups are exploring AI for education/business.</p>
+                    <h3>AI-Enabled Learning:</h3>
+                    <ul>
+                        <li><strong>Adaptive Lessons:</strong> Adjusts to student's speed/style.</li>
+                        <li><strong>Smart Content Delivery:</strong> Right material at the right time.</li>
+                        <li><strong>Automated Grading:</strong> Quickly/fairly grades quizzes.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 الفرص في مصر والتعليم</div>
+                    <p><strong>في مصر:</strong> استخدام الـ AI لإنشاء محتوى محلي (<span class="term">Local Content</span>) وترجمته.</p>
+                    <p><strong>في التعليم (<span class="term">AI-Enabled Learning</span>):</strong></p>
+                    <ul>
+                        <li><strong>Adaptive Lessons:</strong> دروس تتكيف مع سرعة الطالب.</li>
+                        <li><strong>Automated Grading:</strong> التصحيح الآلي للامتحانات لتوفير الوقت.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>7. Challenges, Ethics & Discussion</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Bias:</strong> AI reflects biases in training data (unfair results).</li>
+                        <li><strong>Privacy:</strong> Collection of personal data raises concerns.</li>
+                        <li><strong>Ethical Dilemmas:</strong> Deepfakes, fake news, misuse.</li>
+                    </ul>
+                    <div class="discussion-box">
+                        <strong>Discussion (Egypt):</strong> What ethical guidelines are needed?
+                        <br><em>Answers:</em> Culturally relevant content, data privacy laws, upskilling programs to handle job displacement.
+                    </div>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التحديات والمناقشة</div>
+                    <ul>
+                        <li><strong>التحيز (<span class="term">Bias</span>):</strong> إذا كانت البيانات متحيزة، النتائج ستكون ظالمة.</li>
+                        <li><strong>الخصوصية (<span class="term">Privacy</span>):</strong> كيف نحمي البيانات الشخصية؟</li>
+                        <li><strong>الأخلاقيات:</strong> مشكلة الأخبار المزيفة والـ Deepfakes.</li>
+                    </ul>
+                    <div class="discussion-box">
+                        <strong>مناقشة (مصر):</strong> ما القواعد الأخلاقية المطلوبة؟
+                        <br>1. ضمان محتوى تعليمي غير متحيز.
+                        <br>2. قوانين صارمة لخصوصية البيانات.
+                        <br>3. برامج لرفع المهارات (<span class="term">Upskilling</span>) لمواجهة خوف استبدال الوظائف.
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>Summary</span></div>
+                <div class="content-en">
+                    <p>AI transforms creation/delivery. Gen content & personalization are central. Opportunities: Adaptive learning. Challenges: Bias, Privacy.</p>
+                </div>
+                <div class="content-ar">
+                    <p>الملخص: الـ AI يغير كل شيء. الفرص تكمن في التعليم المتكيف، والتحديات في التحيز والخصوصية.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="lec2" class="lecture">
+            <div class="slide-block summary-block">
+                <div class="slide-header"><span>🚀 Quick Summary / ملخص سريع</span></div>
+                <div class="content-en">
+                    <p><strong>What is this module about?</strong><br>
+                    Ever wonder how Netflix knows what you want to watch? This module explains the algorithms behind "Personalization" and how AI acts like a personal shopper for you.</p>
+                </div>
+                <div class="content-ar">
+                    <p><strong>الموديل ده عن إيه؟</strong><br>
+                    عمرك سألت نفسك إزاي نتفليكس أو أمازون عارفين إنت عايز إيه بالظبط؟ هنا هنشرح خوارزميات "التخصيص" (Personalization) وإزاي الـ AI بيشتغل كأنه "بياع شاطر" بيختارلك اللي على مزاجك.</p>
+                </div>
+            </div>
+            <div class="slide-block">
+                <div class="slide-header"><span>1. Personalization: Definition</span></div>
+                <div class="content-en">
+                    <h3>What is Personalization?</h3>
+                    <p>Using technology to create experiences tailored to each individual. AI analyzes behaviors, preferences, and history to deliver content that feels uniquely yours.</p>
+                    <h3>How AI Learns:</h3>
+                    <ul>
+                        <li>Studies activity (watch, buy, search).</li>
+                        <li>Looks for patterns to predict future likes.</li>
+                        <li>Adapts to new choices over time.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 ما هو التخصيص؟</div>
+                    <p>هو تفصيل التجربة لكل فرد. الـ AI يحلل:</p>
+                    1. السلوك (<span class="term">Behaviors</span>). <br>
+                    2. التفضيلات (<span class="term">Preferences</span>). <br>
+                    3. التاريخ (<span class="term">History</span>). <br>
+                    <p>الهدف: التنبؤ (<span class="term">Predict</span>) بما سيعجبك لاحقاً.</p>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>2. Examples (Netflix, Learning, Ads)</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Netflix:</strong> Tracks viewing habits, compares to millions of users, suggests shows.</li>
+                        <li><strong>Personalized Learning:</strong> (Duolingo/Khan Academy) Adapts lessons to pace/style. Struggling? Extra practice. Excelling? Moves ahead.</li>
+                        <li><strong>Targeted Advertising:</strong> Ads match interests based on browsing/shopping activity.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 أمثلة واقعية</div>
+                    <ul>
+                        <li><strong>Netflix:</strong> يقارن عاداتك بملايين المستخدمين لتقديم اقتراحات.</li>
+                        <li><strong>التعليم (Duolingo):</strong> يتكيف مع سرعتك (<span class="term">Pace</span>). لو تعثرت يعطيك تدريب، لو تفوقت ينقلك للمستوى التالي.</li>
+                        <li><strong>الإعلانات الموجهة:</strong> إعلانات تظهر بناءً على تصفحك.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>3. Techniques (Very Important)</span></div>
+                <div class="content-en">
+                    <ol>
+                        <li><strong>Collaborative Filtering:</strong> Finds users with <em>similar tastes</em>, then recommends items they liked.</li>
+                        <li><strong>Content-Based Filtering:</strong> Recommends items similar to those <em>you have already liked</em>, based on features/keywords.</li>
+                        <li><strong>Deep Learning Models:</strong> Neural networks understand complex patterns for flexible personalization.</li>
+                    </ol>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التقنيات (موضع امتحان)</div>
+                    <p>كيف يعمل النظام تقنياً؟</p>
+                    1. <strong>Collaborative Filtering (التصفية التعاونية):</strong> تبحث عن "ناس" شبهك في الذوق، وتقترح عليك ما أعجبهم.
+                    <br>
+                    2. <strong>Content-Based Filtering (بناءً على المحتوى):</strong> تبحث عن "منتجات" تشبه ما اشتريته سابقاً (نفس الخصائص).
+                    <br>
+                    3. <strong>Deep Learning:</strong> استخدام الشبكات العصبية لفهم الأنماط المعقدة.
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>4. E-Commerce & Metaphor</span></div>
+                <div class="content-en">
+                    <p><strong>E-Commerce (Amazon):</strong> Suggests products based on browsing/purchase history. Helps discovery.</p>
+                    <p><strong>Metaphor: The Personal Shopper:</strong> Think of AI as a smart assistant who remembers likes/dislikes and surprises you with perfect choices - just like a personal shopper.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التجارة الإلكترونية والتشبيه</div>
+                    <p>أمازون يستخدم تاريخ الشراء لاقتراح منتجات.</p>
+                    <p><strong>التشبيه (Metaphor):</strong> الـ AI يعمل كأنه "متسوق شخصي" (<span class="term">Personal Shopper</span>) في سوق مزدحم، يعرف ذوقك ويختار لك الأفضل.</p>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>5. Discussion & Summary</span></div>
+                <div class="content-en">
+                    <div class="discussion-box">
+                        <strong>My Personalized World:</strong>
+                        <br><em>Benefits:</em> Finding new shows, relevant products.
+                        <br><em>Drawbacks:</em> Intrusive (they know too much), Filter Bubbles (limits exposure to new ideas).
+                    </div>
+                    <p><strong>Summary:</strong> AI uses data to personalize. Techniques include collaborative/content-based filtering.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 المناقشة والملخص</div>
+                    <p><strong>فوائد:</strong> إيجاد منتجات مفيدة بسرعة.</p>
+                    <p><strong>عيوب:</strong> تطفل (<span class="term">Intrusive</span>)، وقد تحصرك في فقاعة وتمنعك من رؤية أفكار جديدة.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="lec3" class="lecture">
+            <div class="slide-block summary-block">
+                <div class="slide-header"><span>🚀 Quick Summary / ملخص سريع</span></div>
+                <div class="content-en">
+                    <p><strong>What is this module about?</strong><br>
+                    Here we explore how machines "see" and "hear." We cover the main types of recognition: Face, Speech, and Emotion, and discuss why data bias is a dangerous problem.</p>
+                </div>
+                <div class="content-ar">
+                    <p><strong>الموديل ده عن إيه؟</strong><br>
+                    هنا هنعرف إزاي الآلات بتقدر "تشوف" و"تسمع". هنتكلم عن 3 أنواع: التعرف على الوجوه، والكلام، والمشاعر. وكمان هنركز أوي على مشكلة "التحيز في البيانات" وليه دي حاجة خطيرة.</p>
+                </div>
+            </div>
+            <div class="slide-block">
+                <div class="slide-header"><span>1. Recognition Systems: How?</span></div>
+                <div class="content-en">
+                    <p>Systems that identify patterns in images, audio, video. They "see" or "hear".</p>
+                    <p><strong>How? Pattern Recognition:</strong> AI learns by processing large amounts of data and finding patterns. Uses <strong>Machine Learning</strong> and <strong>Labeled Examples</strong> (training data).</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 كيف تعمل أنظمة التعرف؟</div>
+                    <p>تعتمد على <span class="term">Pattern Recognition</span> (التعرف على الأنماط). تتعلم الآلة عن طريق معالجة بيانات ضخمة وتستخدم "أمثلة مصنفة" (<span class="term">Labeled Examples</span>) للتدريب.</p>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>2. Types of Recognition</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Face Recognition:</strong> Identify/Verify people (Security, Airport, Tagging).</li>
+                        <li><strong>Speech Recognition:</strong> Converts sound waves to words/text (Siri, Alexa, Subtitles).</li>
+                        <li><strong>Emotion Recognition:</strong> Analyzes expressions/tone to detect feelings (Happiness, Anger). Used in Customer Service/Healthcare.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 الأنواع الثلاثة</div>
+                    1. <strong>الوجه:</strong> للأمن والتحقق من الهوية.
+                    <br>
+                    2. <strong>الكلام (Speech):</strong> تحويل الموجات الصوتية (<span class="term">Sound Waves</span>) لنص.
+                    <br>
+                    3. <strong>المشاعر (Emotion):</strong> تحليل تعابير الوجه أو نبرة الصوت (خدمة العملاء).
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>3. Challenges: Bias, Ethics, Privacy</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Bias in Datasets:</strong> If trained on unbalanced data, results are unfair (e.g., poor accuracy on dark skin tones).</li>
+                        <li><strong>Ethical Concerns:</strong> Tracking without consent.</li>
+                        <li><strong>Privacy Risks:</strong> Storing biometric data.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التحديات (هام)</div>
+                    <ul>
+                        <li><strong>التحيز (Bias):</strong> لو البيانات غير متوازنة (<span class="term">Unbalanced</span>)، النتائج ستكون ظالمة لفئات معينة.</li>
+                        <li><strong>الأخلاقيات:</strong> التتبع بدون موافقة.</li>
+                        <li><strong>الخصوصية:</strong> خطر تخزين البيانات البيومترية.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>4. Discussion: AI Ethics</span></div>
+                <div class="content-en">
+                    <div class="discussion-box">
+                        <strong>Should AI be everywhere?</strong>
+                        <br><em>Answers:</em> No, high risks to privacy. Need strict government oversight/laws in Egypt. Need diverse datasets to avoid bias. Opt-out rights needed.
+                    </div>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 مناقشة الأخلاقيات</div>
+                    <p>هل يجب استخدام الـ AI في كل مكان؟</p>
+                    <p>الإجابة المقترحة: لا، بسبب مخاطر الخصوصية. نحتاج قوانين صارمة في مصر، وبيانات متنوعة لتجنب التحيز، وحق الأفراد في الرفض (<span class="term">Opt-out</span>).</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="lec4" class="lecture">
+            <div class="slide-block summary-block">
+                <div class="slide-header"><span>🚀 Quick Summary / ملخص سريع</span></div>
+                <div class="content-en">
+                    <p><strong>What is this module about?</strong><br>
+                    This is the advanced part. We dive into "Computer Vision" (CV). We compare the old way (Traditional ML) with the new powerful way (Deep Learning & CNNs). Important for self-driving cars and medical scans.</p>
+                </div>
+                <div class="content-ar">
+                    <p><strong>الموديل ده عن إيه؟</strong><br>
+                    ده الجزء التقيل شوية (متقدم). هنتكلم عن "الرؤية الحاسوبية" (CV) بالتفصيل. هنقارن بين الطرق القديمة (Traditional) والطرق الحديثة القوية (Deep Learning & CNNs). وده الأساس لعربيات تسلا والأشعة الطبية الذكية.</p>
+                </div>
+            </div>
+            <div class="slide-block">
+                <div class="slide-header"><span>1. Computer Vision (CV): From Pixels to Perception</span></div>
+                <div class="content-en">
+                    <p>Enabling computers to interpret visual info.</p>
+                    <ul>
+                        <li><strong>Classification:</strong> Labeling primary object.</li>
+                        <li><strong>Object Detection:</strong> Locating objects with <em>Bounding Boxes</em>.</li>
+                        <li><strong>Segmentation:</strong> Pixel-level understanding of boundaries.</li>
+                        <li><strong>Scene Understanding:</strong> 3D structure/context.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 الرؤية الحاسوبية ومهامها</div>
+                    <ul>
+                        <li><strong>Classification:</strong> تصنيف الصورة (قطة/كلب).</li>
+                        <li><strong>Object Detection:</strong> تحديد المكان ورسم مربع (<span class="term">Bounding Box</span>).</li>
+                        <li><strong>Segmentation:</strong> تحديد الحدود بدقة البيكسل (التلوين).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>2. Traditional Machine Learning (Pre-Deep Learning)</span></div>
+                <div class="content-en">
+                    <p><strong>Core Philosophy:</strong> Hand-Crafted Features.</p>
+                    <ul>
+                        <li><strong>Manual Feature Engineering:</strong> Experts designed algorithms like <strong>SIFT</strong>, <strong>SURF</strong>, and <strong>HOG</strong>.</li>
+                        <li><strong>Classifiers:</strong> Features fed into SVM, Random Forests, k-NN.</li>
+                        <li><strong>Dimensionality Reduction:</strong> PCA, LDA used to manage vector size.</li>
+                    </ul>
+                    <p>Requires domain expertise, less adaptable.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التعلم الآلي التقليدي (القديم)</div>
+                    <p>كان يعتمد على <strong>هندسة الخصائص اليدوية (<span class="term">Hand-Crafted Features</span>)</strong>.</p>
+                    <ul>
+                        <li>استخدموا خوارزميات صممها خبراء مثل: <span class="term">SIFT</span> و <span class="term">HOG</span>.</li>
+                        <li>بعد استخراج الخصائص، تدخل في مصنف مثل <span class="term">SVM</span>.</li>
+                        <li>يتطلب خبرة بشرية كبيرة.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>3. The Deep Learning Revolution</span></div>
+                <div class="content-en">
+                    <p>Centered on <strong>CNNs</strong>.</p>
+                    <ul>
+                        <li><strong>Automatic Feature Learning:</strong> Models learn hierarchies directly from raw pixels.</li>
+                        <li><strong>End-to-End:</strong> Entire system optimized jointly.</li>
+                        <li><strong>State-of-the-Art Accuracy:</strong> Superior on large datasets (ImageNet).</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 ثورة التعلم العميق</div>
+                    <p>تعتمد على الشبكات العصبية الالتفافية (<span class="term">CNNs</span>).</p>
+                    <ul>
+                        <li><strong>Automatic Feature Learning:</strong> الموديل يتعلم الخصائص بنفسه (تلقائياً) من البيكسلات.</li>
+                        <li><strong>End-to-End:</strong> النظام كله يتدرب ككتلة واحدة.</li>
+                        <li><strong>الدقة:</strong> أعلى بكثير، خاصة مع البيانات الضخمة.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>4. Key Architectures</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Classic CNNs:</strong> AlexNet, VGG, ResNet (Residual connections).</li>
+                        <li><strong>Object Detection:</strong> YOLO (Real-time), R-CNN family.</li>
+                        <li><strong>Generative:</strong> GANs, Diffusion Models.</li>
+                        <li><strong>Vision Transformers (ViT):</strong> NLP architecture applied to images.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 أهم المعماريات (حفظ)</div>
+                    <ul>
+                        <li><strong>CNNs:</strong> مثل AlexNet و ResNet.</li>
+                        <li><strong>YOLO:</strong> للكشف السريع (Real-time).</li>
+                        <li><strong>ViT:</strong> استخدام تقنية النصوص (Transformers) في الصور.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>5. Traditional vs. Deep Learning (Comparison)</span></div>
+                <div class="content-en">
+                    <table>
+                        <tr><th>Aspect</th><th>Traditional ML</th><th>Deep Learning</th></tr>
+                        <tr><td>Feature Eng.</td><td>Manual (Expertise needed)</td><td>Automatic</td></tr>
+                        <tr><td>Data Needs</td><td>Small</td><td>Large labeled datasets</td></tr>
+                        <tr><td>Compute</td><td>Low (CPU)</td><td>High (GPU/TPU)</td></tr>
+                        <tr><td>Performance</td><td>Limited</td><td>State-of-the-Art</td></tr>
+                        <tr><td>Interpretability</td><td>High (Traceable)</td><td>Low ("Black Box")</td></tr>
+                    </table>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 جدول المقارنة (هام جداً)</div>
+                    <table class="rtl-table">
+                        <tr><th>وجه المقارنة</th><th>التقليدي (Traditional)</th><th>العميق (Deep Learning)</th></tr>
+                        <tr><td>الخصائص</td><td>يدوية (Manual)</td><td>تلقائية (Automatic)</td></tr>
+                        <tr><td>البيانات</td><td>قليلة</td><td>ضخمة</td></tr>
+                        <tr><td>الحسابات</td><td>بسيطة (CPU)</td><td>عالية (GPU)</td></tr>
+                        <tr><td>الدقة</td><td>محدودة</td><td>فائقة</td></tr>
+                        <tr><td>التفسير</td><td>سهل الفهم</td><td>صندوق أسود (Black Box)</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>6. Applications & Trends</span></div>
+                <div class="content-en">
+                    <p><strong>Apps:</strong> Healthcare (Tumor detection), Auto (Lane keeping), Security, AR (VSLAM).</p>
+                    <p><strong>Trends:</strong> Self-Supervised Learning (using unlabeled data), Multimodal (CLIP), TinyML (Edge devices).</p>
+                    <p><strong>Challenges:</strong> Dependency on labeled data, Bias, Interpretability (XAI).</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التطبيقات والاتجاهات</div>
+                    <p><strong>التطبيقات:</strong> الصحة (كشف الأورام)، السيارات الذاتية، الواقع المعزز (AR).</p>
+                    <p><strong>الاتجاهات الحديثة:</strong></p>
+                    <ul>
+                        <li><span class="term">Self-Supervised Learning</span>: التعلم من بيانات غير مصنفة لتقليل التكلفة.</li>
+                        <li><span class="term">TinyML</span>: موديلات صغيرة للموبايل.</li>
+                    </ul>
+                    <p><strong>التحديات:</strong> الحاجة لداتا مصنفة، التحيز، وصعوبة التفسير (<span class="term">XAI</span>).</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="lec5" class="lecture">
+            <div class="slide-block summary-block">
+                <div class="slide-header"><span>🚀 Quick Summary / ملخص سريع</span></div>
+                <div class="content-en">
+                    <p><strong>What is this module about?</strong><br>
+                    This module covers the core of modern AI: Deep Learning. We move from simple Neurons to complex CNNs for images. We learn how networks "learn" (Gradient Descent), how to fix errors (Loss Functions), and how to optimize performance (Adam, Dropout).</p>
+                </div>
+                <div class="content-ar">
+                    <p><strong>الموديل ده عن إيه؟</strong><br>
+                    الموديل ده بيغطي قلب الـ AI الحديث: التعلم العميق (Deep Learning). هنبدأ من العصبون البسيط لحد الشبكات المعقدة زي CNN للصور. هنعرف إزاي الشبكة "بتتعلم" (Gradient Descent)، وإزاي نصلح الأخطاء (Loss Functions)، وإزاي نحسن الأداء (Adam, Dropout).</p>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>1. AI vs ML vs DL</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>AI (Artificial Intelligence):</strong> The broad field of creating smart machines.</li>
+                        <li><strong>ML (Machine Learning):</strong> A subset of AI where machines learn from data without explicit programming. Includes Supervised (Labeled) and Unsupervised (Unlabeled) learning.</li>
+                        <li><strong>DL (Deep Learning):</strong> A subset of ML inspired by the human brain (Neural Networks). It uses multi-layer networks to learn rich hierarchical features.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 الفرق بين AI و ML و DL</div>
+                    <ul>
+                        <li><strong>الذكاء الاصطناعي (AI):</strong> المجال العام لصناعة آلات ذكية.</li>
+                        <li><strong>تعلم الآلة (ML):</strong> جزء من AI تتعلم فيه الآلة من البيانات. ينقسم إلى:
+                            <br>- <span class="term">Supervised</span> (بيانات معنونة - Labeled).
+                            <br>- <span class="term">Unsupervised</span> (بيانات غير معنونة - Unlabeled) لاكتشاف الأنماط المخفية.
+                        </li>
+                        <li><strong>التعلم العميق (DL):</strong> جزء من ML يعتمد على الشبكات العصبية (<span class="term">Neural Networks</span>) ويستخدم طبقات متعددة لاستخراج الخصائص المعقدة.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>2. The Artificial Neuron & Activation Functions</span></div>
+                <div class="content-en">
+                    <p><strong>The Neuron:</strong> Takes inputs (x), multiplies by weights (w), adds a bias, and passes the result to an Activation Function (f).</p>
+                    <h3>Activation Functions (Crucial for Non-linearity):</h3>
+                    <ul>
+                        <li><strong>Sigmoid:</strong> Squashes output between 0 and 1. Good for probability but causes "vanishing gradient" problem.</li>
+                        <li><strong>Tanh:</strong> Zero-centered, range [-1, 1]. Better than Sigmoid.</li>
+                        <li><strong>ReLU (Rectified Linear Unit):</strong> f(x) = max(0, x). Fast and solves gradient problems. Most used in modern NNs.</li>
+                        <li><strong>Leaky ReLU:</strong> Solves the "Dying ReLU" problem by allowing a small negative slope.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 العصبون الصناعي ودوال التنشيط</div>
+                    <p><strong>العصبون:</strong> يستقبل مدخلات (x)، يضربها في أوزان (w)، يضيف انحياز (b - Bias)، ويمررها لدالة التنشيط.</p>
+                    <p><strong>دوال التنشيط (مهمة جداً):</strong></p>
+                    <ul>
+                        <li><strong>Sigmoid:</strong> تحصر الناتج بين 0 و 1. تشبه احتمالية الإشعال العصبي، لكنها تسبب مشاكل في التدريب (Gradient Vanishing).</li>
+                        <li><strong>Tanh:</strong> المدى من -1 إلى 1. أفضل لأنها متمركزة حول الصفر.</li>
+                        <li><strong>ReLU:</strong> الدالة الأشهر حالياً. تحول الأرقام السالبة لصفر. سريعة جداً في الحساب.</li>
+                        <li><strong>Leaky ReLU:</strong> تحل مشكلة "موت الخلايا" في ReLU بالسماح بمرور قيم سالبة صغيرة جداً.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>3. CNN (Convolutional Neural Networks)</span></div>
+                <div class="content-en">
+                    <p>Specialized for <strong>Computer Vision</strong> and Image Recognition.</p>
+                    <h3>Architecture Steps:</h3>
+                    <ol>
+                        <li><strong>Convolution Layer:</strong> Extracts features (edges, textures) using filters.</li>
+                        <li><strong>Max Pooling:</strong> Reduces the size of the image (downsampling) to reduce computation.</li>
+                        <li><strong>Flattening:</strong> Converts 2D matrices into a 1D vector.</li>
+                        <li><strong>Fully Connected Layer:</strong> The final classification network.</li>
+                    </ol>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 الشبكات العصبية الالتفافية (CNN)</div>
+                    <p>مخصصة للتعامل مع الصور (Computer Vision).</p>
+                    <p><strong>خطوات المعمارية (حفظ بالترتيب):</strong></p>
+                    1. <strong>Convolution (الالتفاف):</strong> استخراج المزايا (حواف، ألوان) باستخدام الفلاتر.
+                    <br>
+                    2. <strong>Max Pooling (التجميع الأقصى):</strong> تصغير حجم الصورة لتقليل الحسابات.
+                    <br>
+                    3. <strong>Flattening (التسطيح):</strong> تحويل المصفوفة لخط واحد (Vector).
+                    <br>
+                    4. <strong>Fully Connected:</strong> الشبكة النهائية التي تتخذ قرار التصنيف (قطة/كلب).
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>4. Training: Epoch, Batch & Iteration</span></div>
+                <div class="content-en">
+                    <ul>
+                        <li><strong>Epoch:</strong> One complete pass through the <em>entire</em> dataset.</li>
+                        <li><strong>Batch Size:</strong> Number of samples processed before updating the model weights.</li>
+                        <li><strong>Iteration:</strong> Number of batches needed to complete one epoch.</li>
+                    </ul>
+                    <p><em>Example:</em> 1000 samples, Batch size 100 = 10 Iterations per Epoch.</p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 مصطلحات التدريب (هام جداً)</div>
+                    <ul>
+                        <li><strong>Epoch (الحقبة):</strong> مرور الموديل على كل البيانات مرة واحدة كاملة.</li>
+                        <li><strong>Batch Size (حجم الدفعة):</strong> عدد العينات التي يراها الموديل قبل تحديث أوزانه.</li>
+                        <li><strong>Iteration (التكرار):</strong> عدد الدفعات (Batches) داخل الـ Epoch الواحد.</li>
+                    </ul>
+                    <p><em>مثال:</em> لو عندك 1000 صورة، والـ Batch حجمه 100، يبقى عندك 10 Iterations في كل Epoch.</p>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>5. Loss Functions & Optimization</span></div>
+                <div class="content-en">
+                    <h3>Loss Functions (Calculating Error):</h3>
+                    <ul>
+                        <li><strong>MSE (Mean Squared Error):</strong> Used for <em>Regression</em> (predicting numbers).</li>
+                        <li><strong>Cross-Entropy:</strong> Used for <em>Classification</em> (predicting categories).</li>
+                    </ul>
+                    <h3>Optimization (Fixing Error):</h3>
+                    <p><strong>Gradient Descent:</strong> The algorithm used to minimize the loss by updating weights.</p>
+                    <p><strong>Optimizers:</strong>
+                        <br>- <strong>SGD:</strong> Basic Stochastic Gradient Descent.
+                        <br>- <strong>Adam:</strong> Combines AdaGrad and RMSProp. The most popular optimizer.
+                    </p>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 دوال الفقد والتحسين</div>
+                    <p><strong>دوال الفقد (حساب الخطأ):</strong></p>
+                    <ul>
+                        <li><span class="term">MSE</span>: تستخدم في التوقع الرقمي (Regression).</li>
+                        <li><span class="term">Cross-Entropy</span>: تستخدم في التصنيف (Classification).</li>
+                    </ul>
+                    <p><strong>التحسين (Optimization):</strong></p>
+                    <ul>
+                        <li><strong>Gradient Descent:</strong> الخوارزمية التي تقوم بتحديث الأوزان لتقليل الخطأ.</li>
+                        <li><strong>Adam:</strong> المحسن الأكثر استخداماً وشيوعاً اليوم (يجمع مزايا متعددة).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-block">
+                <div class="slide-header"><span>6. Regularization (Solving Overfitting)</span></div>
+                <div class="content-en">
+                    <p><strong>Overfitting:</strong> When the model memorizes training data but fails on new data (high training accuracy, low test accuracy).</p>
+                    <h3>Solutions:</h3>
+                    <ul>
+                        <li><strong>Dropout:</strong> Randomly dropping neurons during training to force the network to be robust.</li>
+                        <li><strong>Early Stopping:</strong> Stop training when validation accuracy stops improving.</li>
+                        <li><strong>Batch Normalization:</strong> Normalizes inputs of each layer. Speeds up training.</li>
+                    </ul>
+                </div>
+                <div class="content-ar">
+                    <div class="ar-title">📌 التجهيز الزائد (Overfitting) وعلاجه</div>
+                    <p><strong>Overfitting:</strong> الموديل "بيحفظ" التدريب ومش بيفهم، فبيغلط في البيانات الجديدة.</p>
+                    <p><strong>الحلول (Regularization):</strong></p>
+                    <ul>
+                        <li><strong>Dropout:</strong> إغلاق عشوائي لبعض الخلايا أثناء التدريب لتقوية الشبكة.</li>
+                        <li><strong>Early Stopping:</strong> إيقاف التدريب بمجرد ما دقة الاختبار تبطل تزيد.</li>
+                        <li><strong>Batch Normalization:</strong> توحيد قياس البيانات داخل الطبقات لتسريع التدريب.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Logic to handle navigation & memory ---
+        
+        // Variables
+        const mainContainer = document.getElementById('main-container');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.overlay');
+        const titles = [
+            "Emerging AI in Multimedia",
+            "Personalization",
+            "Recognition Systems",
+            "Computer Vision (Advanced)",
+            "Deep Learning & Neural Networks"
+        ];
+
+        // 1. Initialization on Load (Restore Preferences)
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('pref_lang');
+            const savedDark = localStorage.getItem('pref_dark');
+
+            if (savedLang === 'ar') {
+                toggleLang(true); // Restore Arabic
+            }
+            if (savedDark === 'true') {
+                toggleDark(true); // Restore Dark Mode
+            }
+        });
+
+        // 2. Navigation Logic
+        function showLec(id, btn) {
+            // Update Sidebar UI
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            // Show Logic
+            document.querySelectorAll('.lecture').forEach(lec => {
+                lec.classList.remove('active');
+            });
+            const targetLec = document.getElementById('lec' + id);
+            if(targetLec) targetLec.classList.add('active');
+
+            // Update Header Title
+            const titleElem = document.getElementById('header-title');
+            if(titles[id-1]) titleElem.innerText = titles[id-1];
+
+            // Mobile: Close menu automatically
+            if(window.innerWidth <= 768) {
+                closeMenu();
+            }
+
+            // Scroll to top smoothly
+            mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 3. Language Toggle
+        function toggleLang(forceAr = null) {
+            const body = document.body;
+            let isAr = false;
+
+            if (forceAr === true) {
+                isAr = true;
+            } else {
+                // Toggle current state
+                isAr = !body.classList.contains('show-ar');
+            }
+
+            if (isAr) {
+                body.classList.add('show-ar');
+                localStorage.setItem('pref_lang', 'ar');
+            } else {
+                body.classList.remove('show-ar');
+                localStorage.setItem('pref_lang', 'en');
+            }
+        }
+
+        // 4. Dark Mode Toggle
+        function toggleDark(forceDark = null) {
+            const body = document.body;
+            let isDark = false;
+
+            if (forceDark === true) {
+                isDark = true;
+            } else {
+                isDark = !body.classList.contains('dark-mode');
+            }
+
+            if (isDark) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('pref_dark', 'true');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('pref_dark', 'false');
+            }
+        }
+
+        // 5. Mobile Menu Logic
+        function openMenu() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
